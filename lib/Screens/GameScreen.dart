@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:ChidiyaUdd/Widgets/Bar.dart';
+import 'package:ChidiyaUdd/Widgets/WinnerModal.dart';
 import 'package:ChidiyaUdd/utils/Constants.dart';
 import 'package:flutter/material.dart';
 
@@ -21,11 +22,7 @@ class _GameScreenState extends State<GameScreen> {
 
   void _makeEditable() {}
   void _endGame() {
-    showDialog(
-        context: context,
-        builder: (_) => SimpleDialog(
-              children: <Widget>[Text("Winner")],
-            ));
+    showDialog(context: context, builder: (_) => WinnerModal(winnerName: player1,));
     setState(() {
       _gameBegan = false;
     });
