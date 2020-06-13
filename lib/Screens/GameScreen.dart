@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:ChidiyaUdd/Widgets/Bar.dart';
 import 'package:ChidiyaUdd/Widgets/WinnerModal.dart';
 import 'package:ChidiyaUdd/utils/Constants.dart';
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 
 class GameScreen extends StatefulWidget {
@@ -13,6 +14,13 @@ class _GameScreenState extends State<GameScreen> {
   bool _gameBegan = false;
   String player1 = "Player 1";
   String player2 = "Player 2";
+  ConfettiController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = ConfettiController();
+  }
 
   void _gameBegin() {
     setState(() {
@@ -22,10 +30,22 @@ class _GameScreenState extends State<GameScreen> {
 
   void _makeEditable() {}
   void _endGame() {
-    showDialog(context: context, builder: (_) => WinnerModal(winnerName: player1,));
+    showDialog(
+        context: context,
+        builder: (_) => WinnerModal(
+              winnerName: player1,
+            ));
+    
+    
     setState(() {
       _gameBegan = false;
     });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override

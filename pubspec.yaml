@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   percent_indicator: ^2.1.1
+  confetti: ^0.5.2
 
 dev_dependencies:
   flutter_test:
