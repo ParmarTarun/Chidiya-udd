@@ -6,9 +6,9 @@ import 'package:percent_indicator/percent_indicator.dart';
 
 class Bar extends StatefulWidget {
 
-  double percent;
-  String player1;
-  String player2;
+  final double percent;
+  final String player1;
+  final String player2;
   Bar({this.percent, this.player1, this.player2});
 
   @override
