@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:ChidiyaUdd/Widgets/Bar.dart';
 import 'package:ChidiyaUdd/Widgets/WinnerModal.dart';
@@ -13,6 +14,24 @@ class _GameScreenState extends State<GameScreen> {
   bool _gameBegan = false;
   String player1 = "Player 1";
   String player2 = "Player 2";
+  String _word = "Ready ?";
+  List<String> _words = [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14"
+  ];
+  Timer _timer;
   TextEditingController controller1;
   TextEditingController controller2;
 
@@ -41,6 +60,11 @@ class _GameScreenState extends State<GameScreen> {
     setState(() {
       _gameBegan = true;
     });
+    _timer = Timer.periodic(Duration(seconds: 3), (timer) {
+      setState(() {
+        _word = _words[Random().nextInt(_words.length)];
+      });
+    });
   }
 
   void _editName(TextEditingController textController) {
@@ -54,27 +78,25 @@ class _GameScreenState extends State<GameScreen> {
             children: <Widget>[
               Expanded(
                   child: Container(
-                    padding: EdgeInsets.all(5.0),
-                    child: TextField(
-                      style: TextStyle(fontSize: 18.0),
-                controller: textController,
-                autofocus: true,
-                decoration: InputDecoration(
-                    border: InputBorder.none
-                ),
-                onSubmitted: (newName) {
+                padding: EdgeInsets.all(5.0),
+                child: TextField(
+                  style: TextStyle(fontSize: 18.0),
+                  controller: textController,
+                  autofocus: true,
+                  decoration: InputDecoration(border: InputBorder.none),
+                  onSubmitted: (newName) {
                     textController.text = newName;
                     Navigator.pop(context);
-                },
-              ),
-                  )),
-              
+                  },
+                ),
+              )),
             ],
           )),
     );
   }
 
   void _endGame(player) {
+    _timer.cancel();
     showDialog(
         context: context,
         builder: (_) => WinnerModal(
@@ -124,12 +146,14 @@ class _GameScreenState extends State<GameScreen> {
                           fontSize: 24.0,
                           fontWeight: FontWeight.bold),
                     ),
-                    IconButton(
-                        icon: Icon(
-                          Icons.edit,
-                          color: Color(Colours.primaryColor),
-                        ),
-                        onPressed: () => _editName(controller2))
+                    _gameBegan
+                        ? SizedBox()
+                        : IconButton(
+                            icon: Icon(
+                              Icons.edit,
+                              color: Color(Colours.primaryColor),
+                            ),
+                            onPressed: () => _editName(controller2))
                   ],
                 ),
               ),
@@ -144,7 +168,7 @@ class _GameScreenState extends State<GameScreen> {
               Transform.rotate(
                 angle: pi,
                 child: Text(
-                  "Word",
+                  _word,
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 34.0,
@@ -171,7 +195,7 @@ class _GameScreenState extends State<GameScreen> {
                                 fontSize: 26.0),
                           ))),
               Text(
-                "Word",
+                _word,
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 34.0,
@@ -195,12 +219,14 @@ class _GameScreenState extends State<GameScreen> {
                         fontSize: 24.0,
                         fontWeight: FontWeight.bold),
                   ),
-                  IconButton(
-                      icon: Icon(
-                        Icons.edit,
-                        color: Color(Colours.primaryColor),
-                      ),
-                      onPressed: () => _editName(controller1))
+                  _gameBegan
+                      ? SizedBox()
+                      : IconButton(
+                          icon: Icon(
+                            Icons.edit,
+                            color: Color(Colours.primaryColor),
+                          ),
+                          onPressed: () => _editName(controller1))
                 ],
               ),
               SizedBox(height: 30.0),
