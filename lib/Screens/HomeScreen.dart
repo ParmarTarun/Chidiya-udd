@@ -31,100 +31,90 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("CHIDIYA UDD"),
-          centerTitle: true,
-          elevation: 0.00,
-          leading: IconButton(icon: Icon(Icons.menu), onPressed: () {}),
-          actions: <Widget>[
-            IconButton(icon: Icon(Icons.more_vert), onPressed: () {})
-          ],
-        ),
         body: Container(
-          child: Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              Image(
-                image: AssetImage('assets/images/home_bg.png'),
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
-              Container(
-                color: Color(Colours.primaryColor),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
+      child: Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+          Image(
+            image: AssetImage('assets/images/home_bg.png'),
+            width: double.infinity,
+            height: double.infinity,
+            fit: BoxFit.cover,
+          ),
+          Container(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image(
+                    image: AssetImage('assets/images/logo_white.png'),
+                    width: 200.0),
+                Text(
+                  "Players",
+                  style: TextStyle(
+                      color: Color(Colours.secondaryColor), fontSize: 24.0),
+                ),
+                SizedBox(height: 10.0),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
+                    Radio(
+                        value: 0,
+                        groupValue: _selectedRadio,
+                        onChanged: (val) {
+                          _radioButtonClicked(val);
+                        }),
                     Text(
-                      "Players",
+                      "2",
                       style: TextStyle(
                           color: Color(Colours.secondaryColor), fontSize: 24.0),
                     ),
-                    SizedBox(height: 10.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Radio(
-                            value: 0,
-                            groupValue: _selectedRadio,
-                            onChanged: (val) {
-                              _radioButtonClicked(val);
-                            }),
-                        Text(
-                          "2",
-                          style: TextStyle(
-                              color: Color(Colours.secondaryColor),
-                              fontSize: 24.0),
-                        ),
-                        Radio(
-                            value: 1,
-                            groupValue: _selectedRadio,
-                            onChanged: (val) {
-                              _radioButtonClicked(val);
-                            }),
-                        Text(
-                          "3",
-                          style: TextStyle(
-                              color: Color(Colours.secondaryColor),
-                              fontSize: 24.0),
-                        ),
-                        Radio(
-                            value: 2,
-                            groupValue: _selectedRadio,
-                            onChanged: (val) {
-                              _radioButtonClicked(val);
-                            }),
-                        Text(
-                          "4",
-                          style: TextStyle(
-                              color: Color(Colours.secondaryColor),
-                              fontSize: 24.0),
-                        ),
-                      ],
+                    Radio(
+                        value: 1,
+                        groupValue: _selectedRadio,
+                        onChanged: (val) {
+                          _radioButtonClicked(val);
+                        }),
+                    Text(
+                      "3",
+                      style: TextStyle(
+                          color: Color(Colours.secondaryColor), fontSize: 24.0),
                     ),
-                    SizedBox(height: 10.0),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 5.0),
-                      decoration: BoxDecoration(
-                          border:
-                              Border.all(color: Color(Colours.secondaryColor)),
-                          borderRadius: BorderRadius.circular(25.0)),
-                      child: FlatButton(
-                        onPressed: startClicked,
-                        child: Text(
-                          "START",
-                          style: TextStyle(
-                              color: Color(Colours.secondaryColor),
-                              fontSize: 24.0),
-                        ),
-                      ),
-                    )
+                    Radio(
+                        value: 2,
+                        groupValue: _selectedRadio,
+                        onChanged: (val) {
+                          _radioButtonClicked(val);
+                        }),
+                    Text(
+                      "4",
+                      style: TextStyle(
+                          color: Color(Colours.secondaryColor), fontSize: 24.0),
+                    ),
                   ],
                 ),
-              )
-            ],
-          ),
-        ));
+                SizedBox(height: 10.0),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 5.0),
+                  decoration: BoxDecoration(
+                      color: Color(Colours.primaryColor),
+                      border: Border.all(color: Color(Colours.secondaryColor)),
+                      borderRadius: BorderRadius.circular(25.0)),
+                  child: FlatButton(
+                    onPressed: startClicked,
+                    child: Text(
+                      "START",
+                      style: TextStyle(
+                          color: Color(Colours.secondaryColor), fontSize: 24.0),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    ));
   }
 }

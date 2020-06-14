@@ -2,7 +2,6 @@ import 'dart:math';
 import 'package:ChidiyaUdd/Widgets/Bar.dart';
 import 'package:ChidiyaUdd/Widgets/WinnerModal.dart';
 import 'package:ChidiyaUdd/utils/Constants.dart';
-import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 
 class GameScreen extends StatefulWidget {
@@ -14,12 +13,28 @@ class _GameScreenState extends State<GameScreen> {
   bool _gameBegan = false;
   String player1 = "Player 1";
   String player2 = "Player 2";
-  ConfettiController _controller;
+  TextEditingController controller1;
+  TextEditingController controller2;
 
   @override
   void initState() {
     super.initState();
-    _controller = ConfettiController();
+    controller1 = TextEditingController(text: player1);
+    controller1.addListener(_controller1Listener);
+    controller2 = TextEditingController(text: player2);
+    controller2.addListener(_controller2Listener);
+  }
+
+  void _controller1Listener() {
+    setState(() {
+      player1 = controller1.text;
+    });
+  }
+
+  void _controller2Listener() {
+    setState(() {
+      player2 = controller2.text;
+    });
   }
 
   void _gameBegin() {
@@ -28,15 +43,44 @@ class _GameScreenState extends State<GameScreen> {
     });
   }
 
-  void _makeEditable() {}
-  void _endGame() {
+  void _editName(TextEditingController textController) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (_) => Container(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Expanded(
+                  child: Container(
+                    padding: EdgeInsets.all(5.0),
+                    child: TextField(
+                      style: TextStyle(fontSize: 18.0),
+                controller: textController,
+                autofocus: true,
+                decoration: InputDecoration(
+                    border: InputBorder.none
+                ),
+                onSubmitted: (newName) {
+                    textController.text = newName;
+                    Navigator.pop(context);
+                },
+              ),
+                  )),
+              
+            ],
+          )),
+    );
+  }
+
+  void _endGame(player) {
     showDialog(
         context: context,
         builder: (_) => WinnerModal(
-              winnerName: player1,
+              winnerName: player,
             ));
-    
-    
+
     setState(() {
       _gameBegan = false;
     });
@@ -44,13 +88,17 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    controller1.removeListener(_controller1Listener);
+    controller1.dispose();
+    controller2.removeListener(_controller2Listener);
+    controller2.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       body: Stack(
         alignment: Alignment.center,
         children: <Widget>[
@@ -60,6 +108,7 @@ class _GameScreenState extends State<GameScreen> {
             fit: BoxFit.cover,
           ),
           Column(
+            mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               SizedBox(height: 30.0),
@@ -80,7 +129,7 @@ class _GameScreenState extends State<GameScreen> {
                           Icons.edit,
                           color: Color(Colours.primaryColor),
                         ),
-                        onPressed: _makeEditable)
+                        onPressed: () => _editName(controller2))
                   ],
                 ),
               ),
@@ -105,8 +154,8 @@ class _GameScreenState extends State<GameScreen> {
               _gameBegan
                   ? Bar(
                       percent: 0.5,
-                      player1: player1,
-                      player2: player2,
+                      player1: controller1.text,
+                      player2: controller2.text,
                     )
                   : Container(
                       padding: EdgeInsets.all(8.0),
@@ -151,7 +200,7 @@ class _GameScreenState extends State<GameScreen> {
                         Icons.edit,
                         color: Color(Colours.primaryColor),
                       ),
-                      onPressed: _makeEditable)
+                      onPressed: () => _editName(controller1))
                 ],
               ),
               SizedBox(height: 30.0),
@@ -167,7 +216,7 @@ class _GameScreenState extends State<GameScreen> {
                 style: TextStyle(
                     color: Color(Colours.secondaryColor), fontSize: 20.0),
               ),
-              onPressed: _endGame)
+              onPressed: () => _endGame(player1))
           : null,
     );
   }
