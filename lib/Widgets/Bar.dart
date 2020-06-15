@@ -49,7 +49,7 @@ class _BarState extends State<Bar> {
               backgroundColor: Colors.transparent,
               lineHeight: 10.0,
               progressColor: Color(Colours.primaryColor),
-              percent: 0.5,
+              percent: widget.percent,
             ),
           ),
           SizedBox(height: 5.0),

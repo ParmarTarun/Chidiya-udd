@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:ChidiyaUdd/Widgets/Bar.dart';
 import 'package:ChidiyaUdd/Widgets/WinnerModal.dart';
 import 'package:ChidiyaUdd/utils/Constants.dart';
+import 'package:ChidiyaUdd/utils/Players.dart';
 import 'package:ChidiyaUdd/utils/Words.dart';
 import 'package:flutter/material.dart';
 
@@ -13,11 +14,9 @@ class GameScreen extends StatefulWidget {
 
 class _GameScreenState extends State<GameScreen> {
   bool _gameBegan = false;
-  List _players = [
-    {"id": 1, "name": "player1", "score": 0, "lock": false},
-    {"id": 2, "name": "player2", "score": 0, "lock": false}
-  ];
-  String _word = "Ready ?";
+  List _players = Players.players;
+  var _word = {"word": "Ready ?", "val": 0};
+  num _percent = 0;
   List _words = Words.words;
   Timer _timer;
   TextEditingController controller1;
@@ -84,9 +83,8 @@ class _GameScreenState extends State<GameScreen> {
     });
     _timer = Timer.periodic(Duration(seconds: 3), (timer) {
       _releaseLocks();
-      var temp = _words[Random().nextInt(_words.length)];
       setState(() {
-        _word=temp["word"];
+        _word = _words[Random().nextInt(_words.length)];
       });
     });
   }
@@ -95,8 +93,15 @@ class _GameScreenState extends State<GameScreen> {
     _players.forEach((player) {
       if (player["id"] == playerId) {
         player["lock"] = true;
+        player["score"] = player["score"] + _word["val"];
       }
     });
+    setState(() {
+      _percent = (_players[1]["score"] - _players[0]["score"]) / 10;
+    });
+    if (_percent == 0.5 || _percent == -0.5) {
+      _endGame();
+    }
   }
 
   String _calculatescore() {
@@ -111,15 +116,23 @@ class _GameScreenState extends State<GameScreen> {
     return winner;
   }
 
-  void _endGame() async {
+  void _resetEverything() {
     _timer.cancel();
-    String winnerName = _calculatescore();
-    showDialog(
-        context: context, builder: (_) => WinnerModal(winnerName: winnerName));
-
+    _releaseLocks();
+    _players.forEach((player) {
+      player["score"] = 0;
+    });
     setState(() {
+      _percent = 0;
       _gameBegan = false;
     });
+  }
+
+  void _endGame() async {
+    String winnerName = _calculatescore();
+    await showDialog(
+        context: context, builder: (_) => WinnerModal(winnerName: winnerName));
+    _resetEverything();
   }
 
   @override
@@ -189,7 +202,7 @@ class _GameScreenState extends State<GameScreen> {
               Transform.rotate(
                 angle: pi,
                 child: Text(
-                  _word,
+                  _word["word"],
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 34.0,
@@ -198,7 +211,7 @@ class _GameScreenState extends State<GameScreen> {
               ),
               _gameBegan
                   ? Bar(
-                      percent: 0.5,
+                      percent: 0.5 + _percent,
                       player1: controller1.text,
                       player2: controller2.text,
                     )
@@ -216,7 +229,7 @@ class _GameScreenState extends State<GameScreen> {
                                 fontSize: 26.0),
                           ))),
               Text(
-                _word,
+                _word["word"],
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 34.0,
