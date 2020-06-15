@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:ChidiyaUdd/Widgets/Bar.dart';
 import 'package:ChidiyaUdd/Widgets/WinnerModal.dart';
 import 'package:ChidiyaUdd/utils/Constants.dart';
+import 'package:ChidiyaUdd/utils/Words.dart';
 import 'package:flutter/material.dart';
 
 class GameScreen extends StatefulWidget {
@@ -12,25 +13,12 @@ class GameScreen extends StatefulWidget {
 
 class _GameScreenState extends State<GameScreen> {
   bool _gameBegan = false;
-  String player1 = "Player 1";
-  String player2 = "Player 2";
-  String _word = "Ready ?";
-  List<String> _words = [
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "10",
-    "11",
-    "12",
-    "13",
-    "14"
+  List _players = [
+    {"id": 1, "name": "player1", "score": 0, "lock": false},
+    {"id": 2, "name": "player2", "score": 0, "lock": false}
   ];
+  String _word = "Ready ?";
+  List _words = Words.words;
   Timer _timer;
   TextEditingController controller1;
   TextEditingController controller2;
@@ -38,32 +26,21 @@ class _GameScreenState extends State<GameScreen> {
   @override
   void initState() {
     super.initState();
-    controller1 = TextEditingController(text: player1);
+    controller1 = TextEditingController(text: _players[0]["name"]);
     controller1.addListener(_controller1Listener);
-    controller2 = TextEditingController(text: player2);
+    controller2 = TextEditingController(text: _players[1]["name"]);
     controller2.addListener(_controller2Listener);
   }
 
   void _controller1Listener() {
     setState(() {
-      player1 = controller1.text;
+      _players[0]["name"] = controller1.text;
     });
   }
 
   void _controller2Listener() {
     setState(() {
-      player2 = controller2.text;
-    });
-  }
-
-  void _gameBegin() {
-    setState(() {
-      _gameBegan = true;
-    });
-    _timer = Timer.periodic(Duration(seconds: 3), (timer) {
-      setState(() {
-        _word = _words[Random().nextInt(_words.length)];
-      });
+      _players[1]["name"] = controller2.text;
     });
   }
 
@@ -95,13 +72,50 @@ class _GameScreenState extends State<GameScreen> {
     );
   }
 
-  void _endGame(player) {
+  void _releaseLocks() {
+    _players.forEach((player) {
+      player["lock"] = false;
+    });
+  }
+
+  void _gameBegin() {
+    setState(() {
+      _gameBegan = true;
+    });
+    _timer = Timer.periodic(Duration(seconds: 3), (timer) {
+      _releaseLocks();
+      var temp = _words[Random().nextInt(_words.length)];
+      setState(() {
+        _word=temp["word"];
+      });
+    });
+  }
+
+  void _tappedUp(int playerId) {
+    _players.forEach((player) {
+      if (player["id"] == playerId) {
+        player["lock"] = true;
+      }
+    });
+  }
+
+  String _calculatescore() {
+    int max = -1;
+    String winner;
+    _players.forEach((player) {
+      if (player["score"] > max) {
+        max = player["score"];
+        winner = player["name"];
+      }
+    });
+    return winner;
+  }
+
+  void _endGame() async {
     _timer.cancel();
+    String winnerName = _calculatescore();
     showDialog(
-        context: context,
-        builder: (_) => WinnerModal(
-              winnerName: player,
-            ));
+        context: context, builder: (_) => WinnerModal(winnerName: winnerName));
 
     setState(() {
       _gameBegan = false;
@@ -140,7 +154,7 @@ class _GameScreenState extends State<GameScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      player2,
+                      _players[1]["name"],
                       style: TextStyle(
                           color: Color(Colours.primaryColor),
                           fontSize: 24.0,
@@ -157,13 +171,20 @@ class _GameScreenState extends State<GameScreen> {
                   ],
                 ),
               ),
-              Container(
-                width: 75.0,
-                height: 75.0,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                        width: 3.0, color: Color(Colours.primaryColor))),
+              GestureDetector(
+                child: Container(
+                  width: 75.0,
+                  height: 75.0,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                          width: 3.0, color: Color(Colours.primaryColor))),
+                ),
+                onTapUp: (_) {
+                  if (_gameBegan && !_players[1]["lock"]) {
+                    _tappedUp(2);
+                  }
+                },
               ),
               Transform.rotate(
                 angle: pi,
@@ -201,19 +222,26 @@ class _GameScreenState extends State<GameScreen> {
                     fontSize: 34.0,
                     color: Color(Colours.primaryColor)),
               ),
-              Container(
-                width: 75.0,
-                height: 75.0,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                        width: 3.0, color: Color(Colours.primaryColor))),
+              GestureDetector(
+                child: Container(
+                  width: 75.0,
+                  height: 75.0,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                          width: 3.0, color: Color(Colours.primaryColor))),
+                ),
+                onTapUp: (_) {
+                  if (_gameBegan && !_players[0]["lock"]) {
+                    _tappedUp(1);
+                  }
+                },
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    player1,
+                    _players[0]["name"],
                     style: TextStyle(
                         color: Color(Colours.primaryColor),
                         fontSize: 24.0,
@@ -242,7 +270,7 @@ class _GameScreenState extends State<GameScreen> {
                 style: TextStyle(
                     color: Color(Colours.secondaryColor), fontSize: 20.0),
               ),
-              onPressed: () => _endGame(player1))
+              onPressed: () => _endGame())
           : null,
     );
   }
