@@ -81,7 +81,7 @@ class _GameScreenState extends State<GameScreen> {
     setState(() {
       _gameBegan = true;
     });
-    _timer = Timer.periodic(Duration(seconds: 3), (timer) {
+    _timer = Timer.periodic(Duration(milliseconds: 1500), (timer) {
       _releaseLocks();
       setState(() {
         _word = _words[Random().nextInt(_words.length)];
