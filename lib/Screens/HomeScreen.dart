@@ -25,13 +25,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void startClicked() {
     if (_selectedRadio == 1) {
-      Navigator.push(context, MaterialPageRoute(builder: (_) => GameScreen(words: Words.words)));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (_) => GameScreen(words: Words.words, tip:"Lift, if it flies.")));
     }
     if (_selectedRadio == 2) {
-      Navigator.push(context, MaterialPageRoute(builder: (_) => GameScreen(words: Words.numbers)));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (_) => GameScreen(words: Words.numbers, tip: "Lift, if its odd.",)));
     }
     if (_selectedRadio == 3) {
-      Navigator.push(context, MaterialPageRoute(builder: (_) => GameScreen(words: Words.colors)));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (_) => GameScreen(words: Words.colors, tip: "Lift, if word is its color .",)));
     }
   }
 

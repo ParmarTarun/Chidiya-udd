@@ -7,9 +7,9 @@ import 'package:ChidiyaUdd/utils/Players.dart';
 import 'package:flutter/material.dart';
 
 class GameScreen extends StatefulWidget {
-
   final List words;
-  GameScreen({@required this.words});
+  final String tip;
+  GameScreen({@required this.words, @required this.tip});
   @override
   _GameScreenState createState() => _GameScreenState();
 }
@@ -17,9 +17,9 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   bool _gameBegan = false;
   List _players = Players.players;
-  var _word = {"word": "Ready ?", "val": 0};
   num _percent = 0;
   Timer _timer;
+  var _word;
   TextEditingController controller1;
   TextEditingController controller2;
 
@@ -30,6 +30,7 @@ class _GameScreenState extends State<GameScreen> {
     controller1.addListener(_controller1Listener);
     controller2 = TextEditingController(text: _players[1]["name"]);
     controller2.addListener(_controller2Listener);
+    _word = {"word": widget.tip, "val": 0};
   }
 
   void _controller1Listener() {
@@ -124,6 +125,7 @@ class _GameScreenState extends State<GameScreen> {
       player["score"] = 0;
     });
     setState(() {
+      _word = {"word": widget.tip, "val": 0};
       _percent = 0;
       _gameBegan = false;
     });
@@ -207,7 +209,9 @@ class _GameScreenState extends State<GameScreen> {
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 34.0,
-                      color: _word["color"]!=null?Color(_word["color"]):Color(Colours.primaryColor)),
+                      color: _word["color"] != null
+                          ? Color(_word["color"])
+                          : Color(Colours.primaryColor)),
                 ),
               ),
               _gameBegan
@@ -234,7 +238,9 @@ class _GameScreenState extends State<GameScreen> {
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 34.0,
-                    color: _word["color"]!=null?Color(_word["color"]):Color(Colours.primaryColor)),
+                    color: _word["color"] != null
+                        ? Color(_word["color"])
+                        : Color(Colours.primaryColor)),
               ),
               GestureDetector(
                 child: Container(

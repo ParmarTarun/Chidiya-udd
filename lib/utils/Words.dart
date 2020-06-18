@@ -77,11 +77,11 @@ class Words {
   ];
   static List colors = [
     {"word": "Red", "color": 0xFFFF0000, "val": 1},
-    {"word": "Green", "color": 0xFFFFFF00, "val": -1},
+    {"word": "Green", "color": 0xFF808080, "val": -1},
     {"word": "White", "color": 0xFF000000, "val": -1},
-    {"word": "Yellow", "color": 0xFFFFFF00, "val": 1},
+    {"word": "Yellow", "color": 0xFF808080, "val": -1},
     {"word": "Aqua", "color": 0xFF00FFFF, "val": 1},
-    {"word": "Red", "color": 0xFFFFFF00, "val": -1},
+    {"word": "Red", "color": 0xFF808080, "val": -1},
     {"word": "Pink", "color": 0xFFFFFF00, "val": -1},
     {"word": "Yellow", "color": 0xFF0000FF, "val": -1},
     {"word": "Aqua", "color": 0xFF800080, "val": -1},
