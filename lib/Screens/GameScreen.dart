@@ -4,10 +4,12 @@ import 'package:ChidiyaUdd/Widgets/Bar.dart';
 import 'package:ChidiyaUdd/Widgets/WinnerModal.dart';
 import 'package:ChidiyaUdd/utils/Constants.dart';
 import 'package:ChidiyaUdd/utils/Players.dart';
-import 'package:ChidiyaUdd/utils/Words.dart';
 import 'package:flutter/material.dart';
 
 class GameScreen extends StatefulWidget {
+
+  final List words;
+  GameScreen({@required this.words});
   @override
   _GameScreenState createState() => _GameScreenState();
 }
@@ -17,7 +19,6 @@ class _GameScreenState extends State<GameScreen> {
   List _players = Players.players;
   var _word = {"word": "Ready ?", "val": 0};
   num _percent = 0;
-  List _words = Words.words;
   Timer _timer;
   TextEditingController controller1;
   TextEditingController controller2;
@@ -84,7 +85,7 @@ class _GameScreenState extends State<GameScreen> {
     _timer = Timer.periodic(Duration(milliseconds: 1500), (timer) {
       _releaseLocks();
       setState(() {
-        _word = _words[Random().nextInt(_words.length)];
+        _word = widget.words[Random().nextInt(widget.words.length)];
       });
     });
   }
@@ -206,7 +207,7 @@ class _GameScreenState extends State<GameScreen> {
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 34.0,
-                      color: Color(Colours.primaryColor)),
+                      color: _word["color"]!=null?Color(_word["color"]):Color(Colours.primaryColor)),
                 ),
               ),
               _gameBegan
@@ -233,7 +234,7 @@ class _GameScreenState extends State<GameScreen> {
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 34.0,
-                    color: Color(Colours.primaryColor)),
+                    color: _word["color"]!=null?Color(_word["color"]):Color(Colours.primaryColor)),
               ),
               GestureDetector(
                 child: Container(

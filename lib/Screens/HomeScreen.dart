@@ -1,5 +1,6 @@
 import 'package:ChidiyaUdd/Screens/GameScreen.dart';
 import 'package:ChidiyaUdd/utils/Constants.dart';
+import 'package:ChidiyaUdd/utils/Words.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,7 +14,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _selectedRadio = 0;
+    _selectedRadio = 1;
   }
 
   void _radioButtonClicked(val) {
@@ -23,8 +24,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void startClicked() {
-    if (_selectedRadio == 0) {
-      Navigator.push(context, MaterialPageRoute(builder: (_) => GameScreen()));
+    if (_selectedRadio == 1) {
+      Navigator.push(context, MaterialPageRoute(builder: (_) => GameScreen(words: Words.words)));
+    }
+    if (_selectedRadio == 2) {
+      Navigator.push(context, MaterialPageRoute(builder: (_) => GameScreen(words: Words.numbers)));
+    }
+    if (_selectedRadio == 3) {
+      Navigator.push(context, MaterialPageRoute(builder: (_) => GameScreen(words: Words.colors)));
     }
   }
 
@@ -50,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     image: AssetImage('assets/images/logo_white.png'),
                     width: 200.0),
                 Text(
-                  "Players",
+                  "Levels",
                   style: TextStyle(
                       color: Color(Colours.secondaryColor), fontSize: 24.0),
                 ),
@@ -60,24 +67,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Radio(
-                        value: 0,
-                        groupValue: _selectedRadio,
-                        onChanged: (val) {
-                          _radioButtonClicked(val);
-                        }),
-                    Text(
-                      "2",
-                      style: TextStyle(
-                          color: Color(Colours.secondaryColor), fontSize: 24.0),
-                    ),
-                    Radio(
                         value: 1,
                         groupValue: _selectedRadio,
                         onChanged: (val) {
                           _radioButtonClicked(val);
                         }),
                     Text(
-                      "3",
+                      "1",
                       style: TextStyle(
                           color: Color(Colours.secondaryColor), fontSize: 24.0),
                     ),
@@ -88,7 +84,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           _radioButtonClicked(val);
                         }),
                     Text(
-                      "4",
+                      "2",
+                      style: TextStyle(
+                          color: Color(Colours.secondaryColor), fontSize: 24.0),
+                    ),
+                    Radio(
+                        value: 3,
+                        groupValue: _selectedRadio,
+                        onChanged: (val) {
+                          _radioButtonClicked(val);
+                        }),
+                    Text(
+                      "3",
                       style: TextStyle(
                           color: Color(Colours.secondaryColor), fontSize: 24.0),
                     ),
